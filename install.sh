@@ -2,7 +2,7 @@
 
 # Update system and install Hyprland
 echo "Updating system and installing Hyprland Kitty..."
-sudo pacman -Syu --noconfirm hyprland kitty wofi vim emacs
+sudo pacman -Syu --noconfirm hyprland kitty wofi vim waybar
 
 # Check if dotfiles directory exists
 DOTFILES_DIR=~/dotfiles
@@ -32,7 +32,7 @@ if [ -d "$DOTFILES_DIR" ]; then
     else
         echo "Hyprland config file not found at $CONFIG_DIR/hyprland.conf"
     fi
-
+    
 else
     echo "Dotfiles directory not found: $DOTFILES_DIR"
     exit 1
