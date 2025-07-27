@@ -1,0 +1,27 @@
+# WiFi Auto-Connect Configuration
+# Keep the actual config private since it contains user-specific paths
+config.conf
+
+# Log files
+*.log
+.wifi-autoconnect.log
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# Local environment files
+.env
+.env.local
