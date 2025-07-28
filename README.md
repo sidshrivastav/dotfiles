@@ -8,7 +8,7 @@ Personal configuration files for Hyprland and related tools.
 
 Install required packages:
 ```bash
-sudo pacman -Syu hyprland kitty wofi vim waybar
+sudo pacman -Syu hyprland kitty wofi vim waybar swaybg
 ```
 
 ### Symlinking Configuration Files
@@ -30,6 +30,13 @@ sudo pacman -Syu hyprland kitty wofi vim waybar
    # Symlink Waybar config files
    ln -sf ~/dotfiles/waybar/config.jsonc ~/.config/waybar/config.jsonc
    ln -sf ~/dotfiles/waybar/style.css ~/.config/waybar/style.css
+   ```
+
+3. **Wallpaper Setup**
+   ```bash
+   # Create Pictures directory and add your wallpaper
+   mkdir -p ~/Pictures
+   # Place your wallpaper at ~/Pictures/wallpaper.jpg
    ```
 
 ## Configuration Files
