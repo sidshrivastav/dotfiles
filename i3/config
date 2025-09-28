@@ -10,7 +10,6 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 # Current Theme
-include ~/.config/themes/claude-black/i3.conf
 
 set $mod Mod4
 
@@ -194,6 +193,6 @@ bar {
 
 # Remove title bars
 for_window [class=".*"] border pixel 2
-gaps inner 10
-gaps outer 5
+gaps inner 5
+gaps outer 2
 smart_borders on
