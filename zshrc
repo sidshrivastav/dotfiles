@@ -106,3 +106,5 @@ source $ZSH/oh-my-zsh.sh
 
 eval "$(starship init zsh)"
 
+
+if [ -e /home/siddhant/.nix-profile/etc/profile.d/nix.sh ]; then . /home/siddhant/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
