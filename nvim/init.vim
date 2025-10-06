@@ -14,9 +14,13 @@ Plug 'nvim-lua/plenary.nvim'                    " Required for Telescope
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
-" Python-specific
+" Language-specific
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'psf/black', { 'branch': 'stable' }        " Python formatter
+
+" Web development
+Plug 'mattn/emmet-vim'                          " HTML/CSS shortcuts
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }  " Markdown preview
 
 " UI enhancements
 Plug 'rose-pine/neovim', {'as': 'rose-pine'}                   " Colorscheme
@@ -59,13 +63,17 @@ nnoremap <leader>e :Ex<CR>
 nnoremap <leader>km :call ShowKeymaps()<CR>
 
 " Telescope keybindings
-nnoremap <leader>ff <cmd>Telescope find_files<cr>   
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>              
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>            
-nnoremap <leader>fr <cmd>Telescope oldfiles<cr>             
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fr <cmd>Telescope oldfiles<cr>
 nnoremap <leader>fc <cmd>Telescope commands<cr>
-nnoremap <leader>fk <cmd>Telescope keymaps<cr>  
+nnoremap <leader>fk <cmd>Telescope keymaps<cr>
+
+" Markdown preview
+nnoremap <leader>mp :MarkdownPreview<CR>
+nnoremap <leader>ms :MarkdownPreviewStop<CR>  
 
 " LSP keybindings (set in Lua config below)
 " These will be available when LSP attaches to a buffer:
@@ -144,6 +152,54 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- TypeScript/JavaScript LSP setup
+vim.lsp.config.ts_ls = {
+  cmd = { 'typescript-language-server', '--stdio' },
+  filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+  root_markers = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' },
+  capabilities = capabilities,
+}
+
+-- Enable ts_ls for JS/TS files
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+  callback = function()
+    vim.lsp.enable('ts_ls')
+  end,
+})
+
+-- HTML LSP setup
+vim.lsp.config.html = {
+  cmd = { 'vscode-html-language-server', '--stdio' },
+  filetypes = { 'html' },
+  root_markers = { 'package.json', '.git' },
+  capabilities = capabilities,
+}
+
+-- Enable html for HTML files
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'html',
+  callback = function()
+    vim.lsp.enable('html')
+  end,
+})
+
+-- CSS LSP setup
+vim.lsp.config.cssls = {
+  cmd = { 'vscode-css-language-server', '--stdio' },
+  filetypes = { 'css', 'scss', 'less' },
+  root_markers = { 'package.json', '.git' },
+  capabilities = capabilities,
+}
+
+-- Enable cssls for CSS files
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'css', 'scss', 'less' },
+  callback = function()
+    vim.lsp.enable('cssls')
+  end,
+})
+
 -- Autocompletion setup
 local cmp = require('cmp')
 local luasnip = require('luasnip')
@@ -211,7 +267,10 @@ pcall(require('telescope').load_extension, 'fzf')
 
 -- Treesitter setup
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { "python", "lua", "vim", "json", "yaml" },
+  ensure_installed = {
+    "python", "lua", "vim", "json", "yaml",
+    "javascript", "typescript", "tsx", "html", "css", "markdown", "markdown_inline"
+  },
   highlight = {
     enable = true,
   },
@@ -321,6 +380,15 @@ function! ShowKeymaps()
   call append(line('$'), '| `<C-f>` | Scroll docs down |')
   call append(line('$'), '')
 
+  " Markdown
+  call append(line('$'), '## Markdown')
+  call append(line('$'), '')
+  call append(line('$'), '| Key | Action |')
+  call append(line('$'), '|-----|--------|')
+  call append(line('$'), '| `<Space>mp` | Start markdown preview in browser |')
+  call append(line('$'), '| `<Space>ms` | Stop markdown preview |')
+  call append(line('$'), '')
+
   " File Explorer
   call append(line('$'), '## File Explorer (netrw)')
   call append(line('$'), '')
@@ -340,9 +408,10 @@ function! ShowKeymaps()
   call append(line('$'), '## Tips')
   call append(line('$'), '')
   call append(line('$'), '- Leader key is `<Space>`')
-  call append(line('$'), '- Most LSP features require pyright to be running')
+  call append(line('$'), '- LSP features require language servers: pyright (Python), typescript-language-server (JS/TS), vscode-html-language-server (HTML), vscode-css-language-server (CSS)')
   call append(line('$'), '- Use `:checkhealth` to verify LSP setup')
   call append(line('$'), '- Use `:LspInfo` to see active language servers')
+  call append(line('$'), '- Emmet shortcuts available in HTML/CSS files (default trigger: `<C-y>,`)')
 
   " Set buffer options
   setlocal nomodifiable
