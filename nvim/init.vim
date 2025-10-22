@@ -200,6 +200,22 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- C/C++ LSP setup (clangd)
+vim.lsp.config.clangd = {
+  cmd = { 'clangd', '--background-index', '--clang-tidy' },
+  filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+  root_markers = { 'compile_commands.json', '.git', 'Makefile' },
+  capabilities = capabilities,
+}
+
+-- Enable clangd for C/C++ files
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'c', 'cpp', 'objc', 'objcpp' },
+  callback = function()
+    vim.lsp.enable('clangd')
+  end,
+})
+
 -- Autocompletion setup
 local cmp = require('cmp')
 local luasnip = require('luasnip')
@@ -269,7 +285,8 @@ pcall(require('telescope').load_extension, 'fzf')
 require('nvim-treesitter.configs').setup {
   ensure_installed = {
     "python", "lua", "vim", "json", "yaml",
-    "javascript", "typescript", "tsx", "html", "css", "markdown", "markdown_inline"
+    "javascript", "typescript", "tsx", "html", "css", "markdown", "markdown_inline",
+    "c", "cpp"
   },
   highlight = {
     enable = true,
