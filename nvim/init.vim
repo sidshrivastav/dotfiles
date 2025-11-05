@@ -216,6 +216,22 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- Zig LSP setup (zls)
+vim.lsp.config.zls = {
+  cmd = { 'zls' },
+  filetypes = { 'zig', 'zir' },
+  root_markers = { 'build.zig', '.git' },
+  capabilities = capabilities,
+}
+
+-- Enable zls for Zig files
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'zig', 'zir' },
+  callback = function()
+    vim.lsp.enable('zls')
+  end,
+})
+
 -- Autocompletion setup
 local cmp = require('cmp')
 local luasnip = require('luasnip')
@@ -286,7 +302,7 @@ require('nvim-treesitter.configs').setup {
   ensure_installed = {
     "python", "lua", "vim", "json", "yaml",
     "javascript", "typescript", "tsx", "html", "css", "markdown", "markdown_inline",
-    "c", "cpp"
+    "c", "cpp", "zig"
   },
   highlight = {
     enable = true,
@@ -425,7 +441,7 @@ function! ShowKeymaps()
   call append(line('$'), '## Tips')
   call append(line('$'), '')
   call append(line('$'), '- Leader key is `<Space>`')
-  call append(line('$'), '- LSP features require language servers: pyright (Python), typescript-language-server (JS/TS), vscode-html-language-server (HTML), vscode-css-language-server (CSS)')
+  call append(line('$'), '- LSP features require language servers: pyright (Python), typescript-language-server (JS/TS), vscode-html-language-server (HTML), vscode-css-language-server (CSS), clangd (C/C++), zls (Zig)')
   call append(line('$'), '- Use `:checkhealth` to verify LSP setup')
   call append(line('$'), '- Use `:LspInfo` to see active language servers')
   call append(line('$'), '- Emmet shortcuts available in HTML/CSS files (default trigger: `<C-y>,`)')
